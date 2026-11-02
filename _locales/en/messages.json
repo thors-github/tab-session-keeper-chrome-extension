@@ -1,0 +1,511 @@
+{
+  "extensionName": {
+    "message": "Tab Session Keeper"
+  },
+  "extensionActionTitle": {
+    "message": "Tab Session Keeper"
+  },
+  "extensionDescription": {
+    "message": "Keeps selected tabs active with background requests and optional persistent website rules."
+  },
+  "appTagline": {
+    "message": "A guardian for your session."
+  },
+  "manageRules": {
+    "message": "Manage website rules"
+  },
+  "currentTab": {
+    "message": "CURRENT TAB"
+  },
+  "loadingTab": {
+    "message": "Loading tab …"
+  },
+  "unsupportedTabNotice": {
+    "message": "Keep-alive cannot run on this page. Open a regular HTTP or HTTPS website."
+  },
+  "unsupportedTabTitle": {
+    "message": "This tab is not supported"
+  },
+  "noWebsite": {
+    "message": "No website open"
+  },
+  "noTitle": {
+    "message": "Untitled"
+  },
+  "noWebsiteFallback": {
+    "message": "No website open"
+  },
+  "tabKeepAlive": {
+    "message": "Keep-alive for this tab"
+  },
+  "off": {
+    "message": "Off"
+  },
+  "offStatus": {
+    "message": "Keep-alive is off."
+  },
+  "readyWhenYouAre": {
+    "message": "Ready when you are."
+  },
+  "lastRequest": {
+    "message": "Last request"
+  },
+  "lastActivity": {
+    "message": "Last activity signal"
+  },
+  "lastRenewal": {
+    "message": "Last renewal attempt"
+  },
+  "nextAttempt": {
+    "message": "Next attempt"
+  },
+  "paused": {
+    "message": "Paused"
+  },
+  "testNow": {
+    "message": "Test now"
+  },
+  "resume": {
+    "message": "Resume"
+  },
+  "intervalAndAddress": {
+    "message": "Interval & URL"
+  },
+  "intervalDefault": {
+    "message": "Every 5 minutes"
+  },
+  "interval": {
+    "message": "Interval"
+  },
+  "minutes": {
+    "message": "minutes"
+  },
+  "endpoint": {
+    "message": "Keep-alive URL"
+  },
+  "optional": {
+    "message": "optional"
+  },
+  "endpointAutomatic": {
+    "message": "Automatic: current page URL"
+  },
+  "endpointCurrent": {
+    "message": "Current page URL"
+  },
+  "endpointHelp": {
+    "message": "Leave empty or enter a suitable URL on the same website."
+  },
+  "applySettings": {
+    "message": "Apply settings"
+  },
+  "tabSettingsHelp": {
+    "message": "Applies to this tab. Use “Remember this website” to save these settings permanently."
+  },
+  "afterRestart": {
+    "message": "After a browser restart, too"
+  },
+  "ruleAutoDescription": {
+    "message": "Automatically enable matching open tabs."
+  },
+  "rememberSite": {
+    "message": "Remember this website"
+  },
+  "persistentRuleAria": {
+    "message": "Persistent website rule"
+  },
+  "reuseSiteRule": {
+    "message": "Use website rule again"
+  },
+  "recentAttempts": {
+    "message": "Recent attempts"
+  },
+  "recentAttemptsAria": {
+    "message": "Recent keep-alive attempts"
+  },
+  "footnote": {
+    "message": "Requests, activity signals and renewal attempts do not confirm an active login. Fixed session limits and device sleep still apply."
+  },
+  "diagnosticCount": {
+    "message": "$p1$ of up to 10",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "historyActivitySent": {
+    "message": "Activity sent"
+  },
+  "historyRequestSuccess": {
+    "message": "Request successful"
+  },
+  "historyRenewalSent": {
+    "message": "Renewal attempted"
+  },
+  "historyPaused": {
+    "message": "Paused · check login"
+  },
+  "historyError": {
+    "message": "Failed"
+  },
+  "historyWaiting": {
+    "message": "Waiting for the tab"
+  },
+  "historyCompleted": {
+    "message": "Attempt completed"
+  },
+  "httpStatus": {
+    "message": "HTTP $p1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "intervalEveryOne": {
+    "message": "Every minute"
+  },
+  "intervalEveryMany": {
+    "message": "Every $p1$ minutes",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "methodActivity": {
+    "message": "Activity signal"
+  },
+  "methodRenewal": {
+    "message": "Native renewal"
+  },
+  "methodRequest": {
+    "message": "Background request"
+  },
+  "executionLabel": {
+    "message": "$p1$ · $p2$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "beyondTrustIntervalNote": {
+    "message": "BeyondTrust uses activity signals: $p1$. Saved interval: $p2$. A custom keep-alive URL uses background requests.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "nativeIntervalNote": {
+    "message": "$p1$ uses its own session renewal: $p2$. Saved interval: $p3$. A custom keep-alive URL uses background requests.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "tabCustomSettings": {
+    "message": "Custom settings for this tab"
+  },
+  "tabException": {
+    "message": "Tab exception until close or restart"
+  },
+  "sourceSite": {
+    "message": "Persistent website rule"
+  },
+  "sourceTab": {
+    "message": "Active until close or website change"
+  },
+  "ruleMissingAccess": {
+    "message": "Rule saved. Website access is missing."
+  },
+  "ruleSavedDescription": {
+    "message": "Website rule saved. New matching tabs start automatically."
+  },
+  "ruleStoredOff": {
+    "message": "Website rule saved and turned off."
+  },
+  "allowWebsiteAccess": {
+    "message": "Allow website access"
+  },
+  "updateSiteRule": {
+    "message": "Update website rule"
+  },
+  "settingsOnlyTab": {
+    "message": "Settings applied to this tab."
+  },
+  "ruleSavedSuccess": {
+    "message": "Website rule saved. It also applies after Chrome restarts."
+  },
+  "tabRuleRestoredSuccess": {
+    "message": "This tab uses the website rule again."
+  },
+  "optionsTitle": {
+    "message": "Website rules · Tab Session Keeper"
+  },
+  "optionsHeading": {
+    "message": "Your website rules"
+  },
+  "optionsTagline": {
+    "message": "Remember once. Guard again after a restart."
+  },
+  "optionsIntro": {
+    "message": "These rules enable keep-alive for matching open tabs and tabs you open later. They remain saved after a Chrome restart. To add a website, open the extension there and choose “Remember this website”."
+  },
+  "rulesAria": {
+    "message": "Saved website rules"
+  },
+  "emptyHeading": {
+    "message": "No websites saved yet"
+  },
+  "emptyDescription": {
+    "message": "Open a website, then choose “Remember this website” in the popup."
+  },
+  "explanationHeading": {
+    "message": "How the rules work"
+  },
+  "explanationOrigin": {
+    "message": "A rule matches the same protocol, host and port. Subdomains are separate. The extension does not open tabs or reload pages. Unloaded or frozen tabs wait until their document can run."
+  },
+  "explanationOverride": {
+    "message": "A tab exception takes priority over the website rule. It ends when the tab closes or Chrome restarts."
+  },
+  "explanationProfiles": {
+    "message": "Recognized BeyondTrust consoles use activity signals. Guacamole and Proxmox VE use their own session-renewal interfaces. The popup shows the actual interval; your saved interval stays unchanged. A custom keep-alive URL uses background requests at your saved interval."
+  },
+  "explanationLimit": {
+    "message": "Successful requests, activity signals and renewal attempts do not guarantee an active login. The website decides whether to extend a session; fixed session limits still apply. Nothing runs while Chrome is closed or the device is asleep."
+  },
+  "footerLocal": {
+    "message": "Local to this device · No data sent to our own service"
+  },
+  "footerVersion": {
+    "message": "Version $p1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "website": {
+    "message": "WEBSITE"
+  },
+  "ruleEnable": {
+    "message": "Enable website rule"
+  },
+  "ruleEnabledAria": {
+    "message": "Enable website rule for $p1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "save": {
+    "message": "Save"
+  },
+  "grantAccess": {
+    "message": "Allow access"
+  },
+  "deleteRule": {
+    "message": "Delete rule"
+  },
+  "ruleOff": {
+    "message": "Rule turned off"
+  },
+  "ruleAccessGranted": {
+    "message": "Saved permanently · Website access granted"
+  },
+  "ruleAccessMissing": {
+    "message": "Website access missing · Rule paused"
+  },
+  "ruleSavedNotice": {
+    "message": "Website rule saved."
+  },
+  "ruleAccessNotice": {
+    "message": "Website access granted."
+  },
+  "ruleDeletedNotice": {
+    "message": "Website rule deleted."
+  },
+  "errorExtensionUnavailable": {
+    "message": "The extension is not responding. Please try again."
+  },
+  "errorActionFailed": {
+    "message": "The action failed. Please try again."
+  },
+  "errorInvalidInterval": {
+    "message": "Enter a whole number of minutes between 1 and 60."
+  },
+  "errorInvalidEndpoint": {
+    "message": "Enter a valid keep-alive URL."
+  },
+  "errorEndpointScope": {
+    "message": "The keep-alive URL must belong to this exact website and must not contain credentials."
+  },
+  "errorPermissionDenied": {
+    "message": "Website access was not granted. Persistent activation was not enabled."
+  },
+  "errorPermissionRequest": {
+    "message": "Website access could not be requested. Open the extension on the website and try again."
+  },
+  "application": {
+    "message": "Application"
+  },
+  "runtimeIdle": {
+    "message": "Active. Waiting for the next attempt."
+  },
+  "runtimePermissionMissing": {
+    "message": "Website access is missing."
+  },
+  "runtimeAppLoading": {
+    "message": "$p1$ is still loading. Waiting for the signed-in console.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "runtimeBusy": {
+    "message": "An attempt is still running. The next attempt follows the schedule."
+  },
+  "runtimeWaitingDocument": {
+    "message": "Waiting for a loaded tab."
+  },
+  "runtimeAuthRequired": {
+    "message": "$p1$: Sign-in required. Sign in, then resume.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "runtimeHttpAuth": {
+    "message": "HTTP $p1$: Check your login or access, then resume.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "runtimeRedirect": {
+    "message": "Redirect detected. Check the website, then resume."
+  },
+  "runtimeActivitySent": {
+    "message": "$p1$: Activity signal sent. Server policy determines session lifetime.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "runtimeRenewalSent": {
+    "message": "$p1$: Native session renewal attempted. Server policy determines session lifetime.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "runtimeHttpSuccess": {
+    "message": "Request successful. The website decides whether the session is extended."
+  },
+  "runtimeTimeout": {
+    "message": "Request timed out after 15 seconds."
+  },
+  "runtimeSchedulerError": {
+    "message": "Scheduling failed. Reload the extension."
+  },
+  "runtimeInjectionPermission": {
+    "message": "Script access failed. Check website access and enable the tab again."
+  },
+  "runtimeInjectionUnavailable": {
+    "message": "The script could not run in this tab. Check the tab and extension."
+  },
+  "runtimeHttpError": {
+    "message": "HTTP $p1$: Request unsuccessful.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "runtimeNetworkError": {
+    "message": "Network request failed. The next attempt follows the schedule."
+  },
+  "runtimeUnsupported": {
+    "message": "$p1$: This app version is not supported. Requests are paused.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "runtimeUnsupportedAuth": {
+    "message": "$p1$: This authentication method is not supported. Requests are paused.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "runtimeNativeError": {
+    "message": "$p1$: Native session renewal failed. The next attempt follows the schedule.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "errorInvalidWebsite": {
+    "message": "Choose a valid HTTP or HTTPS website."
+  },
+  "errorEndpointOrigin": {
+    "message": "The keep-alive URL must belong to the same website."
+  },
+  "errorInvalidRequest": {
+    "message": "Invalid request."
+  },
+  "errorUnsupportedTab": {
+    "message": "This tab is not supported. Open a regular HTTP or HTTPS website."
+  },
+  "errorPermissionRequired": {
+    "message": "Allow website access first."
+  },
+  "errorTabInactive": {
+    "message": "Enable this tab first."
+  },
+  "errorTabPaused": {
+    "message": "Resume the paused tab first."
+  },
+  "errorUnknownAction": {
+    "message": "Unknown action."
+  },
+  "errorUnauthorizedSender": {
+    "message": "This sender is not allowed."
+  },
+  "errorInternal": {
+    "message": "An internal error occurred. Please try again."
+  },
+  "actionTitle": {
+    "message": "Tab Session Keeper"
+  },
+  "badgeActive": {
+    "message": "On",
+    "description": "Toolbar badge for normal active keep-alive operation."
+  }
+}

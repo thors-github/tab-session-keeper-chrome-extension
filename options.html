@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="optionsTitle">Website rules · Tab Session Keeper</title>
+  <link rel="stylesheet" href="ui.css">
+  <script type="module" src="options.js"></script>
+</head>
+<body class="options-page">
+  <div class="options-shell">
+    <header class="brand options-brand"><img src="icons/off128.png" width="64" height="64" alt=""><div><p class="eyebrow">TAB SESSION KEEPER</p><h1 data-i18n="optionsHeading">Your website rules</h1><p data-i18n="optionsTagline">Remember once. Guard again after a restart.</p></div></header>
+    <main>
+      <p class="intro" data-i18n="optionsIntro">These rules enable keep-alive for matching open tabs and tabs you open later. They remain saved after a Chrome restart. To add a website, open the extension there and choose “Remember this website”.</p>
+      <p id="page-feedback" class="feedback" role="alert" hidden></p>
+      <section id="rules-list" class="rules-list" data-i18n-aria-label="rulesAria" aria-label="Saved website rules" aria-busy="true"></section>
+      <div id="empty-state" class="empty-state" hidden><img src="icons/off128.png" width="80" height="80" alt=""><h2 data-i18n="emptyHeading">No websites saved yet</h2><p data-i18n="emptyDescription">Open a website, then choose “Remember this website” in the popup.</p></div>
+      <aside class="explanation"><h2 data-i18n="explanationHeading">How the rules work</h2><p data-i18n="explanationOrigin">A rule matches the same protocol, host and port. Subdomains are separate. The extension does not open tabs or reload pages. Unloaded or frozen tabs wait until their document can run.</p><p data-i18n="explanationOverride">A tab exception takes priority over the website rule. It ends when the tab closes or Chrome restarts.</p><p data-i18n="explanationProfiles">Recognized BeyondTrust consoles use activity signals. Guacamole and Proxmox VE use their own session-renewal interfaces. The popup shows the actual interval; your saved interval stays unchanged. A custom keep-alive URL uses background requests at your saved interval.</p><p data-i18n="explanationLimit">Successful requests, activity signals and renewal attempts do not guarantee an active login. The website decides whether to extend a session; fixed session limits still apply. Nothing runs while Chrome is closed or the device is asleep.</p></aside>
+    </main>
+    <footer class="options-footer"><span id="extension-version"></span> · <span data-i18n="footerLocal">Local to this device · No data sent to our own service</span></footer>
+  </div>
+  <template id="rule-template">
+    <form class="rule-card card" novalidate>
+      <div class="rule-header"><div class="rule-title"><span class="eyebrow" data-i18n="website">WEBSITE</span><h2 class="rule-origin"></h2></div><label class="switch"><input class="rule-enabled" type="checkbox"><span class="switch-track" aria-hidden="true"></span><span class="sr-only" data-i18n="ruleEnable">Enable website rule</span></label></div>
+      <p class="permission-state helper"></p>
+      <div class="rule-fields"><div class="field"><label><span data-i18n="interval">Interval</span><div class="input-unit"><input name="intervalMinutes" type="number" min="1" max="60" step="1" required><span data-i18n="minutes">minutes</span></div></label></div><div class="field endpoint-field"><label><span data-i18n="endpoint">Keep-alive URL</span> <span class="muted" data-i18n="optional">optional</span><input name="endpoint" type="text" data-i18n-placeholder="endpointCurrent" placeholder="Current page URL" spellcheck="false" autocomplete="off"></label></div></div>
+      <div class="rule-actions"><button type="submit" class="button secondary" data-i18n="save">Save</button><button type="button" class="button primary grant-access" data-i18n="grantAccess" hidden>Allow access</button><button type="button" class="text-button danger delete-rule" data-i18n="deleteRule">Delete rule</button></div>
+      <p class="feedback rule-feedback" role="alert" hidden></p>
+    </form>
+  </template>
+</body>
+</html>

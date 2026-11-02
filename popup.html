@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="extensionName">Tab Session Keeper</title>
+  <link rel="stylesheet" href="ui.css">
+  <script type="module" src="popup.js"></script>
+</head>
+<body class="popup-page">
+  <header class="brand">
+    <img id="keeper-logo" src="icons/off128.png" width="48" height="48" alt="">
+    <div><h1>Tab Session Keeper</h1><p data-i18n="appTagline">A guardian for your session.</p></div>
+    <button class="icon-button" id="open-options" type="button" data-i18n-aria-label="manageRules" data-i18n-title="manageRules" aria-label="Manage website rules" title="Manage website rules"><span aria-hidden="true">⚙</span></button>
+  </header>
+  <main id="popup-main" aria-busy="true">
+    <section class="site-heading" data-i18n-aria-label="currentTab" aria-label="Current tab">
+      <span class="eyebrow" data-i18n="currentTab">CURRENT TAB</span>
+      <h2 id="tab-title" data-i18n="loadingTab">Loading tab …</h2>
+      <p class="origin" id="tab-origin">–</p>
+    </section>
+    <p class="notice" id="unsupported" data-i18n="unsupportedTabNotice" hidden>Keep-alive cannot run on this page. Open a regular HTTP or HTTPS website.</p>
+    <section class="card control-card">
+      <div class="toggle-row">
+        <div><label class="control-label" for="tab-enabled" data-i18n="tabKeepAlive">Keep-alive for this tab</label><p class="helper" id="activation-source" data-i18n="off">Off</p></div>
+        <label class="switch"><input id="tab-enabled" type="checkbox" disabled><span class="switch-track" aria-hidden="true"></span><span class="sr-only" data-i18n="tabKeepAlive">Keep-alive for this tab</span></label>
+      </div>
+      <div class="request-status" id="status-box" data-status="idle" role="status"><span class="status-dot" aria-hidden="true"></span><span id="status-message" data-i18n="readyWhenYouAre">Ready when you are.</span></div>
+      <p class="method-summary" id="method-summary" hidden></p>
+      <dl class="timing"><div><dt id="last-attempt-label" data-i18n="lastRequest">Last request</dt><dd id="last-attempt">–</dd></div><div><dt data-i18n="nextAttempt">Next attempt</dt><dd id="next-attempt">–</dd></div></dl>
+      <div class="button-row"><button id="test-now" class="button secondary" type="button" data-i18n="testNow" disabled>Test now</button><button id="resume-tab" class="button primary" type="button" data-i18n="resume" hidden>Resume</button></div>
+    </section>
+    <details class="settings-panel"><summary><span data-i18n="intervalAndAddress">Interval &amp; URL</span><span class="muted" id="interval-summary" data-i18n="intervalDefault">Every 5 minutes</span></summary>
+      <form id="settings-form" class="settings-form" novalidate>
+        <div class="field interval-field"><label for="interval" data-i18n="interval">Interval</label><div class="input-unit"><input id="interval" name="intervalMinutes" type="number" min="1" max="60" step="1" value="5" required><span data-i18n="minutes">minutes</span></div></div>
+        <details><summary><span data-i18n="endpoint">Keep-alive URL</span> <span class="muted" data-i18n="optional">optional</span></summary><div class="field"><label class="sr-only" for="endpoint" data-i18n="endpoint">Keep-alive URL</label><input id="endpoint" name="endpoint" type="text" data-i18n-placeholder="endpointAutomatic" placeholder="Automatic: current page URL" spellcheck="false" autocomplete="off"><p class="helper" data-i18n="endpointHelp">Leave empty or enter a suitable URL on the same website.</p></div></details>
+        <p class="helper profile-settings-note" id="profile-settings-note" hidden></p>
+        <button class="button secondary full-width" id="apply-settings" type="submit" data-i18n="applySettings" disabled>Apply settings</button>
+        <p class="helper" data-i18n="tabSettingsHelp">Applies to this tab. Use “Remember this website” to save these settings permanently.</p>
+      </form>
+    </details>
+    <section class="remember-card" data-i18n-aria-label="persistentRuleAria" aria-label="Persistent website rule">
+      <div><h3 data-i18n="afterRestart">After a browser restart, too</h3><p id="rule-description" data-i18n="ruleAutoDescription">Automatically enable matching open tabs.</p></div>
+      <button class="button primary full-width" id="remember-site" type="button" data-i18n="rememberSite" disabled>Remember this website</button>
+      <button class="text-button" id="reset-override" type="button" data-i18n="reuseSiteRule" hidden>Use website rule again</button>
+    </section>
+    <p id="feedback" class="feedback" role="alert" hidden></p>
+    <details class="diagnostics" id="diagnostics" hidden><summary><span data-i18n="recentAttempts">Recent attempts</span><span class="muted" id="diagnostics-count"></span></summary><ol id="attempt-history" data-i18n-aria-label="recentAttemptsAria" aria-label="Recent keep-alive attempts"></ol></details>
+    <p class="footnote" data-i18n="footnote">Requests and activity signals do not confirm an active login. Fixed session limits and device sleep still apply.</p>
+  </main>
+</body>
+</html>

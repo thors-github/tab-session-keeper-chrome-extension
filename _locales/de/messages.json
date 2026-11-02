@@ -1,0 +1,511 @@
+{
+  "extensionName": {
+    "message": "Tab Session Keeper"
+  },
+  "extensionActionTitle": {
+    "message": "Tab Session Keeper"
+  },
+  "extensionDescription": {
+    "message": "Hält ausgewählte Tabs mit Hintergrundanfragen aktiv – mit optionalen dauerhaften Website-Regeln."
+  },
+  "appTagline": {
+    "message": "Ein Wächter für deine Sitzung."
+  },
+  "manageRules": {
+    "message": "Website-Regeln verwalten"
+  },
+  "currentTab": {
+    "message": "AKTUELLER TAB"
+  },
+  "loadingTab": {
+    "message": "Tab wird geladen …"
+  },
+  "unsupportedTabNotice": {
+    "message": "Auf dieser Seite kann Keep-alive nicht ausgeführt werden. Öffne eine normale HTTP- oder HTTPS-Website."
+  },
+  "unsupportedTabTitle": {
+    "message": "Dieser Tab wird nicht unterstützt"
+  },
+  "noWebsite": {
+    "message": "Keine Website geöffnet"
+  },
+  "noTitle": {
+    "message": "Ohne Titel"
+  },
+  "noWebsiteFallback": {
+    "message": "Keine Website geöffnet"
+  },
+  "tabKeepAlive": {
+    "message": "Keep-alive für diesen Tab"
+  },
+  "off": {
+    "message": "Ausgeschaltet"
+  },
+  "offStatus": {
+    "message": "Keep-alive ist ausgeschaltet."
+  },
+  "readyWhenYouAre": {
+    "message": "Bereit, wenn du es bist."
+  },
+  "lastRequest": {
+    "message": "Letzte Anfrage"
+  },
+  "lastActivity": {
+    "message": "Letztes Aktivitätssignal"
+  },
+  "lastRenewal": {
+    "message": "Letzter Verlängerungsversuch"
+  },
+  "nextAttempt": {
+    "message": "Nächster Versuch"
+  },
+  "paused": {
+    "message": "Pausiert"
+  },
+  "testNow": {
+    "message": "Jetzt testen"
+  },
+  "resume": {
+    "message": "Fortsetzen"
+  },
+  "intervalAndAddress": {
+    "message": "Intervall & Adresse"
+  },
+  "intervalDefault": {
+    "message": "Alle 5 Minuten"
+  },
+  "interval": {
+    "message": "Intervall"
+  },
+  "minutes": {
+    "message": "Minuten"
+  },
+  "endpoint": {
+    "message": "Keep-alive-Adresse"
+  },
+  "optional": {
+    "message": "optional"
+  },
+  "endpointAutomatic": {
+    "message": "Automatisch: aktuelle Seitenadresse"
+  },
+  "endpointCurrent": {
+    "message": "Aktuelle Seitenadresse"
+  },
+  "endpointHelp": {
+    "message": "Leer lassen oder eine passende Adresse derselben Website angeben."
+  },
+  "applySettings": {
+    "message": "Einstellungen übernehmen"
+  },
+  "tabSettingsHelp": {
+    "message": "Gilt für diesen Tab. Dauerhaft speichern kannst du die Werte mit „Für diese Website merken“."
+  },
+  "afterRestart": {
+    "message": "Auch nach einem Neustart"
+  },
+  "ruleAutoDescription": {
+    "message": "Passende offene Tabs automatisch aktivieren."
+  },
+  "rememberSite": {
+    "message": "Für diese Website merken"
+  },
+  "persistentRuleAria": {
+    "message": "Dauerhafte Website-Regel"
+  },
+  "reuseSiteRule": {
+    "message": "Website-Regel wieder verwenden"
+  },
+  "recentAttempts": {
+    "message": "Letzte Versuche"
+  },
+  "recentAttemptsAria": {
+    "message": "Letzte Keep-alive-Versuche"
+  },
+  "footnote": {
+    "message": "Anfragen, Aktivitätssignale und Verlängerungsversuche bestätigen keine aktive Anmeldung. Feste Sitzungslimits und Ruhezustand bleiben wirksam."
+  },
+  "diagnosticCount": {
+    "message": "$p1$ von höchstens 10",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "historyActivitySent": {
+    "message": "Aktivität gesendet"
+  },
+  "historyRequestSuccess": {
+    "message": "Anfrage erfolgreich"
+  },
+  "historyRenewalSent": {
+    "message": "Verlängerung angefordert"
+  },
+  "historyPaused": {
+    "message": "Pausiert · Anmeldung prüfen"
+  },
+  "historyError": {
+    "message": "Fehlgeschlagen"
+  },
+  "historyWaiting": {
+    "message": "Wartet auf den Tab"
+  },
+  "historyCompleted": {
+    "message": "Versuch abgeschlossen"
+  },
+  "httpStatus": {
+    "message": "HTTP $p1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "intervalEveryOne": {
+    "message": "Jede Minute"
+  },
+  "intervalEveryMany": {
+    "message": "Alle $p1$ Minuten",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "methodActivity": {
+    "message": "Aktivitätssignal"
+  },
+  "methodRenewal": {
+    "message": "Native Verlängerung"
+  },
+  "methodRequest": {
+    "message": "Hintergrundanfrage"
+  },
+  "executionLabel": {
+    "message": "$p1$ · $p2$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "beyondTrustIntervalNote": {
+    "message": "BeyondTrust verwendet Aktivitätssignale: $p1$. Gespeichertes Intervall: $p2$. Eine eigene Keep-alive-Adresse verwendet Hintergrundanfragen.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "nativeIntervalNote": {
+    "message": "$p1$ verwendet die eigene Sitzungsverlängerung: $p2$. Gespeichertes Intervall: $p3$. Eine eigene Keep-alive-Adresse verwendet Hintergrundanfragen.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "tabCustomSettings": {
+    "message": "Eigene Einstellung für diesen Tab"
+  },
+  "tabException": {
+    "message": "Tab-Ausnahme bis zum Schließen oder Neustart"
+  },
+  "sourceSite": {
+    "message": "Dauerhafte Website-Regel"
+  },
+  "sourceTab": {
+    "message": "Aktiv bis zum Schließen oder Websitewechsel"
+  },
+  "ruleMissingAccess": {
+    "message": "Regel gespeichert. Website-Zugriff fehlt."
+  },
+  "ruleSavedDescription": {
+    "message": "Website-Regel gespeichert. Neue passende Tabs starten automatisch."
+  },
+  "ruleStoredOff": {
+    "message": "Website-Regel gespeichert und ausgeschaltet."
+  },
+  "allowWebsiteAccess": {
+    "message": "Website-Zugriff erlauben"
+  },
+  "updateSiteRule": {
+    "message": "Website-Regel aktualisieren"
+  },
+  "settingsOnlyTab": {
+    "message": "Einstellungen für diesen Tab übernommen."
+  },
+  "ruleSavedSuccess": {
+    "message": "Website-Regel gespeichert. Sie gilt auch nach dem Chrome-Neustart."
+  },
+  "tabRuleRestoredSuccess": {
+    "message": "Dieser Tab verwendet wieder die Website-Regel."
+  },
+  "optionsTitle": {
+    "message": "Website-Regeln · Tab Session Keeper"
+  },
+  "optionsHeading": {
+    "message": "Deine Website-Regeln"
+  },
+  "optionsTagline": {
+    "message": "Einmal merken. Nach dem Neustart wieder bewachen."
+  },
+  "optionsIntro": {
+    "message": "Diese Regeln aktivieren Keep-alive für passende offene und später geöffnete Tabs. Sie bleiben nach einem Chrome-Neustart gespeichert. Für weitere Websites öffne dort das Erweiterungssymbol und wähle „Für diese Website merken“."
+  },
+  "rulesAria": {
+    "message": "Gespeicherte Website-Regeln"
+  },
+  "emptyHeading": {
+    "message": "Noch keine Website gespeichert"
+  },
+  "emptyDescription": {
+    "message": "Öffne eine Website und aktiviere im Popup „Für diese Website merken“."
+  },
+  "explanationHeading": {
+    "message": "Was die Regeln bewirken"
+  },
+  "explanationOrigin": {
+    "message": "Eine Regel gilt für denselben Ursprung aus Protokoll, Host und Port. Subdomains werden getrennt behandelt. Die Erweiterung öffnet selbst keine Tabs und lädt Seiten nicht neu. Noch ungeladene oder eingefrorene Tabs warten, bis ihr Dokument ausführbar ist."
+  },
+  "explanationOverride": {
+    "message": "Eine Tab-Ausnahme hat Vorrang vor der Website-Regel. Sie endet beim Schließen des Tabs oder beim Chrome-Neustart."
+  },
+  "explanationProfiles": {
+    "message": "Erkannte BeyondTrust-Konsolen verwenden Aktivitätssignale. Guacamole und Proxmox VE verwenden ihre eigenen Schnittstellen zur Sitzungsverlängerung. Das Popup zeigt das tatsächliche Intervall; dein gespeichertes Intervall bleibt unverändert. Eine eigene Keep-alive-Adresse verwendet Hintergrundanfragen im gespeicherten Intervall."
+  },
+  "explanationLimit": {
+    "message": "Erfolgreiche Anfragen, Aktivitätssignale und Verlängerungsversuche garantieren keine aktive Anmeldung. Die Website entscheidet über die Verlängerung; feste Sitzungslimits bleiben bestehen. Während Chrome geschlossen ist oder der Rechner schläft, werden keine Anfragen oder Aktivitätssignale gesendet."
+  },
+  "footerLocal": {
+    "message": "Lokal auf diesem Gerät · Keine Übertragung an einen eigenen Dienst"
+  },
+  "footerVersion": {
+    "message": "Version $p1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "website": {
+    "message": "WEBSITE"
+  },
+  "ruleEnable": {
+    "message": "Website-Regel aktivieren"
+  },
+  "ruleEnabledAria": {
+    "message": "Website-Regel für $p1$ aktivieren",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "save": {
+    "message": "Speichern"
+  },
+  "grantAccess": {
+    "message": "Zugriff erlauben"
+  },
+  "deleteRule": {
+    "message": "Regel löschen"
+  },
+  "ruleOff": {
+    "message": "Regel ausgeschaltet"
+  },
+  "ruleAccessGranted": {
+    "message": "Dauerhaft gespeichert · Website-Zugriff erteilt"
+  },
+  "ruleAccessMissing": {
+    "message": "Website-Zugriff fehlt · Regel pausiert"
+  },
+  "ruleSavedNotice": {
+    "message": "Website-Regel gespeichert."
+  },
+  "ruleAccessNotice": {
+    "message": "Website-Zugriff erteilt."
+  },
+  "ruleDeletedNotice": {
+    "message": "Website-Regel gelöscht."
+  },
+  "errorExtensionUnavailable": {
+    "message": "Die Erweiterung antwortet gerade nicht. Bitte erneut versuchen."
+  },
+  "errorActionFailed": {
+    "message": "Die Aktion ist fehlgeschlagen. Bitte erneut versuchen."
+  },
+  "errorInvalidInterval": {
+    "message": "Bitte ein Intervall von 1 bis 60 ganzen Minuten eingeben."
+  },
+  "errorInvalidEndpoint": {
+    "message": "Bitte eine gültige Keep-alive-Adresse eingeben."
+  },
+  "errorEndpointScope": {
+    "message": "Die Keep-alive-Adresse muss zu genau dieser Website gehören und darf keine Zugangsdaten enthalten."
+  },
+  "errorPermissionDenied": {
+    "message": "Website-Zugriff wurde nicht erteilt. Die dauerhafte Aktivierung wurde nicht eingeschaltet."
+  },
+  "errorPermissionRequest": {
+    "message": "Website-Zugriff konnte nicht angefragt werden. Öffne die Erweiterung auf der Website und versuche es erneut."
+  },
+  "application": {
+    "message": "Anwendung"
+  },
+  "runtimeIdle": {
+    "message": "Aktiv. Wartet auf den nächsten Versuch."
+  },
+  "runtimePermissionMissing": {
+    "message": "Website-Zugriff fehlt."
+  },
+  "runtimeAppLoading": {
+    "message": "$p1$ lädt noch. Wartet auf die angemeldete Konsole.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "runtimeBusy": {
+    "message": "Ein Versuch läuft noch. Nächster Versuch zum regulären Intervall."
+  },
+  "runtimeWaitingDocument": {
+    "message": "Wartet auf einen geladenen Tab."
+  },
+  "runtimeAuthRequired": {
+    "message": "$p1$: Anmeldung erforderlich. Bitte anmelden und danach fortsetzen.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "runtimeHttpAuth": {
+    "message": "HTTP $p1$: Anmeldung oder Zugriff prüfen, dann fortsetzen.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "runtimeRedirect": {
+    "message": "Weiterleitung erkannt. Bitte die Website prüfen und danach fortsetzen."
+  },
+  "runtimeActivitySent": {
+    "message": "$p1$: Aktivitätssignal gesendet. Die Serverrichtlinie bestimmt die Sitzungsdauer.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "runtimeRenewalSent": {
+    "message": "$p1$: Native Sitzungsverlängerung angefordert. Die Serverrichtlinie bestimmt die Sitzungsdauer.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "runtimeHttpSuccess": {
+    "message": "Anfrage erfolgreich. Die Sitzungsverlängerung bestimmt die Website."
+  },
+  "runtimeTimeout": {
+    "message": "Zeitüberschreitung nach 15 Sekunden."
+  },
+  "runtimeSchedulerError": {
+    "message": "Zeitplanung fehlgeschlagen. Bitte die Erweiterung neu laden."
+  },
+  "runtimeInjectionPermission": {
+    "message": "Skriptzugriff fehlgeschlagen. Website-Zugriff prüfen und den Tab erneut aktivieren."
+  },
+  "runtimeInjectionUnavailable": {
+    "message": "Skript konnte im Tab nicht ausgeführt werden. Bitte Tab und Erweiterung prüfen."
+  },
+  "runtimeHttpError": {
+    "message": "HTTP $p1$: Anfrage nicht erfolgreich.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "runtimeNetworkError": {
+    "message": "Netzwerkanfrage fehlgeschlagen. Nächster Versuch zum regulären Intervall."
+  },
+  "runtimeUnsupported": {
+    "message": "$p1$: Diese App-Version wird nicht unterstützt. Anfragen sind pausiert.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "runtimeUnsupportedAuth": {
+    "message": "$p1$: Diese Anmeldemethode wird nicht unterstützt. Anfragen sind pausiert.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "runtimeNativeError": {
+    "message": "$p1$: Native Sitzungsverlängerung fehlgeschlagen. Nächster Versuch zum regulären Intervall.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "errorInvalidWebsite": {
+    "message": "Bitte eine gültige HTTP(S)-Website wählen."
+  },
+  "errorEndpointOrigin": {
+    "message": "Die Keep-alive-Adresse muss zur selben Website gehören."
+  },
+  "errorInvalidRequest": {
+    "message": "Ungültige Anfrage."
+  },
+  "errorUnsupportedTab": {
+    "message": "Dieser Tab wird nicht unterstützt. Bitte eine normale HTTP(S)-Website öffnen."
+  },
+  "errorPermissionRequired": {
+    "message": "Bitte zuerst den Website-Zugriff erlauben."
+  },
+  "errorTabInactive": {
+    "message": "Bitte den Tab zuerst aktivieren."
+  },
+  "errorTabPaused": {
+    "message": "Bitte zuerst die pausierte Aktivierung fortsetzen."
+  },
+  "errorUnknownAction": {
+    "message": "Unbekannte Aktion."
+  },
+  "errorUnauthorizedSender": {
+    "message": "Nicht erlaubter Absender."
+  },
+  "errorInternal": {
+    "message": "Interner Fehler. Bitte erneut versuchen."
+  },
+  "actionTitle": {
+    "message": "Tab Session Keeper"
+  },
+  "badgeActive": {
+    "message": "An",
+    "description": "Toolbar badge for normal active keep-alive operation."
+  }
+}
