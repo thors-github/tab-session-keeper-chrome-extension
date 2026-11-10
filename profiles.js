@@ -4,6 +4,7 @@ export const PROFILE_REGISTRY = Object.freeze({
   beyondtrust: {id: 'beyondtrust', name: 'BeyondTrust', world: 'ISOLATED', maxIntervalMinutes: 1, method: 'activity'},
   guacamole: {id: 'guacamole', name: 'Apache Guacamole', world: 'MAIN', maxIntervalMinutes: 5, method: 'renewal'},
   'proxmox-ve': {id: 'proxmox-ve', name: 'Proxmox VE', world: 'MAIN', maxIntervalMinutes: 15, method: 'renewal'},
+  'rdp-secure-access': {id: 'rdp-secure-access', name: 'RDP Secure Access', world: 'ISOLATED', maxIntervalMinutes: 3, method: 'monitor'},
 });
 
 export const getProfile = id => PROFILE_REGISTRY[id] || PROFILE_REGISTRY.generic;
@@ -15,13 +16,39 @@ export const getProfile = id => PROFILE_REGISTRY[id] || PROFILE_REGISTRY.generic
  */
 export async function profileOperation(expectedOrigin, configuredEndpoint = '', requestedProfile = 'auto', detectOnly = false) {
   const result = (kind, profile, extra = {}) => ({kind, profile,
-    method: profile === 'beyondtrust' ? 'activity' : ['guacamole', 'proxmox-ve'].includes(profile) ? 'renewal' : 'request', ...extra});
+    method: profile === 'rdp-secure-access' ? 'monitor' : profile === 'beyondtrust' ? 'activity' : ['guacamole', 'proxmox-ve'].includes(profile) ? 'renewal' : 'request', ...extra});
   if (location.origin !== expectedOrigin || document.readyState === 'loading') return result('waiting', 'generic');
   const has = selector => Boolean(document.querySelector(selector));
   const scripts = () => Array.from(document.querySelectorAll('script[src]'));
   const scriptPath = expression => scripts().some(script => {
     try { return expression.test(new URL(script.src || script.getAttribute('src'), location.href).pathname); } catch { return false; }
   });
+  function portalState(doc) {
+    const title = String(doc.title || doc.querySelector('title')?.textContent || '').trim();
+    const logo = Array.from(doc.querySelectorAll('img[src]')).some(image => {
+      try {
+        const url = new URL(image.getAttribute('src'), `${expectedOrigin}/`);
+        return url.origin === expectedOrigin && url.pathname === '/img/sec_acs_logo_wht.png';
+      } catch { return false; }
+    });
+    const candidate = title === 'RDP Secure Access - Web Protection Technology' || logo;
+    if (!candidate) return {candidate: false, product: false, state: 'unknown'};
+    const text = String(doc.body?.innerText || doc.body?.textContent || '');
+    const branded = logo || text.replace(/\s+/g, '').toLowerCase().includes('webprotectiontechnology');
+    const product = title === 'RDP Secure Access - Web Protection Technology' && branded;
+    const login = Array.from(doc.querySelectorAll('form')).some(form =>
+      String(form.getAttribute('method') || '').toLowerCase() === 'post' &&
+      form.querySelector('input[name="username"][type="text"]') && form.querySelector('input[name="password"][type="password"]') &&
+      form.querySelector('input[name="2fa"][type="password"]') && form.querySelector('[name="Anmelden"][type="submit"]'));
+    const logout = Array.from(doc.querySelectorAll('a[href]')).some(anchor => {
+      try {
+        const url = new URL(anchor.getAttribute('href'), `${expectedOrigin}/`);
+        return url.origin === expectedOrigin && url.pathname === '/' && url.searchParams.get('action') === 'logout';
+      } catch { return false; }
+    });
+    const authenticated = /Sie\s+sind\s+angemeldet\s+als/i.test(text) && logout;
+    return {candidate, product, state: login ? 'login' : authenticated ? 'authenticated' : 'unknown'};
+  }
   function detect() {
     if (configuredEndpoint) return {profile: 'generic', supported: true};
     if (has('bt-app-component')) return {profile: 'beyondtrust', supported: /^\/console(?:\/|$)/.test(location.pathname)};
@@ -31,6 +58,8 @@ export async function profileOperation(expectedOrigin, configuredEndpoint = '', 
     if (guacScript || has('guac-login, guac-client-panel')) return {profile: 'guacamole', supported: guacScript && guacRoot};
     const pveScript = scriptPath(/^\/pve2\/js\/pvemanagerlib\.js$/);
     if (pveScript) return {profile: 'proxmox-ve', supported: has('#history-form')};
+    const portal = portalState(document);
+    if (portal.candidate) return {profile: 'rdp-secure-access', supported: location.pathname === '/' && portal.product};
     return {profile: 'generic', supported: true};
   }
   const detected = detect();
@@ -52,6 +81,16 @@ export async function profileOperation(expectedOrigin, configuredEndpoint = '', 
       window.dispatchEvent(new MouseEvent('mousemove', {bubbles: false, cancelable: false, view: window,
         clientX: 0, clientY: 0, buttons: 0}));
       return result('activity', profile);
+    }
+
+    if (profile === 'rdp-secure-access') {
+      const page = portalState(document);
+      if (!page.product || location.pathname !== '/') return result('unsupported', profile);
+      if (page.state === 'login') return result('auth-required', profile);
+      if (page.state !== 'authenticated') return result('indeterminate', profile);
+      // The portal rotates its session cookie on page requests. Observe the current
+      // document only; extra GETs could race its own refresh/favicon requests.
+      return result('monitored', profile);
     }
 
     if (profile === 'guacamole' || profile === 'proxmox-ve') {

@@ -494,6 +494,41 @@ test('registry selects native MAIN world and applies distinct Guacamole/Proxmox 
   }
 });
 
+test('RDP portal is a monitor profile with a three-minute check interval and no HTTP result', async () => {
+  const f = fixture();
+  f.detect('rdp-secure-access');
+  f.execute(async () => [{result: {kind: 'monitored', profile: 'rdp-secure-access', method: 'monitor'}}]);
+  await f.keeper.message({type: 'setTab', tabId: 1, enabled: true, intervalMinutes: 5});
+  const state = await f.keeper.message({type: 'getState', tabId: 1});
+  assert.equal(f.calls[0].world, 'ISOLATED');
+  assert.equal(state.effective.intervalMinutes, 5);
+  assert.equal(state.runtime.actualIntervalMinutes, 3);
+  assert.equal(state.runtime.method, 'monitor');
+  assert.equal(state.runtime.messageKey, 'runtimePortalMonitored');
+  assert.equal(state.runtime.httpStatus, null);
+  assert.equal(f.alarms.get('keeper-tab:1').periodInMinutes, 3);
+});
+
+test('RDP visible login and indeterminate page state pause checks without inventing an HTTP result', async () => {
+  for (const [kind, messageKey] of [['auth-required', 'runtimeAuthRequired'], ['indeterminate', 'runtimeIndeterminate']]) {
+    const f = fixture();
+    f.detect('rdp-secure-access');
+    f.execute(async () => [{result: {kind, profile: 'rdp-secure-access', method: 'monitor'}}]);
+    await f.keeper.message({type: 'setTab', tabId: 1, enabled: true, intervalMinutes: 5});
+    const state = await f.keeper.message({type: 'getState', tabId: 1});
+    assert.equal(state.runtime.status, 'paused');
+    assert.equal(state.runtime.messageKey, messageKey);
+    assert.deepEqual(state.runtime.messageArgs, ['RDP Secure Access']);
+    assert.equal(state.runtime.httpStatus, null);
+    assert.equal(state.runtime.actualIntervalMinutes, 3);
+    assert.equal(state.runtime.attempts.at(-1).kind, kind);
+    assert.equal(state.effective.iconState, 'off');
+    assert.equal(f.badges.get(1), '!');
+    assert.equal(f.alarms.size, 0);
+    assert.equal((await f.keeper.message({type: 'testNow', tabId: 1})).errorKey, 'errorTabPaused');
+  }
+});
+
 test('two-state icons use localized active badges and preserve warning priority', async () => {
   const f = fixture();
   f.badges.set(undefined, 'AN');

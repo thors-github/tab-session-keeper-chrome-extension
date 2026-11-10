@@ -7,7 +7,7 @@ A Chrome extension that helps keep selected tabs signed in through background ac
 ## Features
 
 - Enable keep-alive per tab, or remember websites across Chrome restarts.
-- Automatic profiles for BeyondTrust, Apache Guacamole and Proxmox VE; background requests for other websites.
+- Keep-alive profiles for BeyondTrust, Apache Guacamole and Proxmox VE; RDP Secure Access portal monitoring adds no requests.
 - English and German UI, with active **On** / **An** badges and red-eyed Eisenwächter icons.
 - Local settings; no extension backend or telemetry.
 
@@ -15,7 +15,7 @@ A Chrome extension that helps keep selected tabs signed in through background ac
 
 Requires Chrome 120 or newer. No build step is needed.
 
-1. Download `tab-session-keeper-1.2.1.zip` from the latest release and extract it to a permanent folder.
+1. Download `tab-session-keeper-1.2.2.zip` from the latest release and extract it to a permanent folder.
 2. Open `chrome://extensions` and enable **Developer mode**.
 3. Choose **Load unpacked**, select the folder containing `manifest.json`, and pin the extension.
 
@@ -29,7 +29,7 @@ Replace the files in the **same folder Chrome already loads**, then click **Relo
 2. Set an interval under **Interval & URL**, or use **Test now** to check an action immediately.
 3. Choose **Remember this website** to enable matching open tabs automatically after a restart.
 
-Chrome must be running and the computer awake. The website controls session expiry, reauthentication and MFA; this extension cannot guarantee indefinite login. See the [technical guide](docs/TECHNICAL.md) for profile support, permissions and test coverage.
+Chrome must be running and the computer awake. The website controls session expiry, reauthentication and MFA; this extension cannot guarantee indefinite login. RDP Secure Access only monitors the loaded portal and leaves its own refresh unchanged; monitoring cannot guarantee that logouts stop. See the [technical guide](docs/TECHNICAL.md) for profile support, permissions and test coverage.
 
 ## Development
 

@@ -79,6 +79,47 @@ test('native profiles use renewal labels while custom endpoints retain normal re
   assert.equal(settings.endpoint, 'https://support.example/heartbeat');
 });
 
+test('RDP Secure Access is explicitly monitoring with a separate three-minute cadence', () => {
+  for (const locale of ['en-US', 'de-DE']) {
+    language(locale);
+    const settings = readSettings(form(5), 'https://support.example');
+    const execution = executionDetails(settings, {profile: 'rdp-secure-access', method: 'monitor', actualIntervalMinutes: 3});
+    assert.equal(execution.actualIntervalMinutes, 3);
+    assert.equal(execution.configuredIntervalMinutes, 5);
+    assert.equal(execution.renewal, false);
+    assert.equal(execution.activity, false);
+    assert.ok(execution.label.includes('RDP Secure Access'));
+    assert.equal(execution.monitor, true);
+    assert.ok(execution.label.includes(t('methodMonitor')));
+    assert.ok(!execution.label.includes(t('methodRequest')));
+    assert.ok(execution.label.includes(t('intervalEveryMany', [3])));
+    assert.ok(execution.intervalNote.includes(t('intervalEveryMany', [5])));
+    assert.equal(settings.intervalMinutes, 5);
+  }
+});
+
+test('portal monitoring is translated separately from HTTP success and keeps paused states in all UI locales', () => {
+  for (const locale of ['en-US', 'de-DE', 'fr-FR']) {
+    const api = mockApi(locale);
+    const monitored = localizeRuntime({status: 'success', profile: 'rdp-secure-access', method: 'monitor', httpStatus: null,
+      attempts: [{kind: 'monitored', profile: 'rdp-secure-access'}]}, api);
+    assert.equal(monitored.message, t('runtimePortalMonitored', ['RDP Secure Access'], api));
+    assert.equal(monitored.httpStatus, null);
+    assert.notEqual(monitored.message, t('runtimeHttpSuccess', [], api));
+    for (const [kind, key] of [['auth-required', 'runtimeAuthRequired'], ['indeterminate', 'runtimeIndeterminate']]) {
+      const runtime = {status: 'paused', profile: 'rdp-secure-access', method: 'monitor', httpStatus: null,
+        message: 'Veraltete deutsche Meldung', attempts: [{kind, profile: 'rdp-secure-access'}]};
+      const localized = localizeRuntime(runtime, api);
+      assert.equal(localized.status, 'paused');
+      assert.equal(localized.httpStatus, null);
+      assert.equal(localized.message, t(key, ['RDP Secure Access'], api));
+      assert.notEqual(localized.message, t('runtimeHttpSuccess', [], api));
+      const modern = localizeRuntime({...runtime, messageKey: key, messageArgs: ['RDP Secure Access']}, api);
+      assert.equal(modern.message, localized.message);
+    }
+  }
+});
+
 test('legacy German runtime messages are rebuilt from metadata in the current UI language', () => {
   const old = {status: 'success', message: 'Anfrage erfolgreich. Die Sitzungsverlängerung bestimmt die Website.', httpStatus: 200, lastAttemptAt: 1234, attempts: [{kind: 'http', status: 'success'}]};
   const english = localizeRuntime(old, mockApi('en-US'));

@@ -9,6 +9,7 @@ import { startFixture } from './fixture-server.mjs';
 import { releaseSmoke } from './release-smoke.mjs';
 import { beyondTrustSmoke } from './beyondtrust-smoke.mjs';
 import { newProfilesSmoke } from './newprofiles-smoke.mjs';
+import { rdpSmoke } from './rdp-smoke.mjs';
 
 // Browser plugin not available. All browser work uses a disposable Playwright profile.
 // The temporary copy gets loopback-only host access to automate script injection.
@@ -157,3 +158,4 @@ try {
 await releaseSmoke(source);
 await beyondTrustSmoke(source);
 await newProfilesSmoke(source);
+await rdpSmoke(source);

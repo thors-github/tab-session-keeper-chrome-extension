@@ -31,13 +31,14 @@ function legacyRuntimeKey(runtime) {
   if (runtime.status === 'idle') return 'runtimeIdle';
   if (runtime.status === 'waiting') return runtime.waitReason === 'app' ? 'runtimeAppLoading' : runtime.waitReason === 'busy' ? 'runtimeBusy' : 'runtimeWaitingDocument';
   if (runtime.status === 'paused') {
+    if (kind === 'indeterminate') return 'runtimeIndeterminate';
     if (kind === 'unsupported') return 'runtimeUnsupported';
     if (kind === 'unsupported-auth') return 'runtimeUnsupportedAuth';
     if (kind === 'auth-required') return 'runtimeAuthRequired';
     if (runtime.httpStatus === 401 || runtime.httpStatus === 403) return 'runtimeHttpAuth';
     return 'runtimeRedirect';
   }
-  if (runtime.status === 'success') return runtime.method === 'activity' ? 'runtimeActivitySent' : runtime.method === 'renewal' ? 'runtimeRenewalSent' : 'runtimeHttpSuccess';
+  if (runtime.status === 'success') return runtime.method === 'activity' ? 'runtimeActivitySent' : runtime.method === 'renewal' ? 'runtimeRenewalSent' : runtime.method === 'monitor' ? 'runtimePortalMonitored' : 'runtimeHttpSuccess';
   if (kind === 'timeout') return 'runtimeTimeout';
   if (kind === 'native-error') return 'runtimeNativeError';
   if (kind === 'scheduler-error') return 'runtimeSchedulerError';
@@ -48,9 +49,9 @@ function legacyRuntimeKey(runtime) {
 
 export function runtimeMessage(runtime = {}, api = globalThis.chrome) {
   const key = runtime.messageKey || legacyRuntimeKey(runtime);
-  const profileKeys = ['runtimeAppLoading', 'runtimeAuthRequired', 'runtimeActivitySent', 'runtimeRenewalSent', 'runtimeUnsupported', 'runtimeUnsupportedAuth', 'runtimeNativeError'];
+  const profileKeys = ['runtimeAppLoading', 'runtimeAuthRequired', 'runtimeActivitySent', 'runtimeRenewalSent', 'runtimeUnsupported', 'runtimeUnsupportedAuth', 'runtimeNativeError', 'runtimePortalMonitored', 'runtimeIndeterminate'];
   const last = Array.isArray(runtime.attempts) ? runtime.attempts.at(-1) : null;
-  const profile = {beyondtrust: 'BeyondTrust', guacamole: 'Apache Guacamole', 'proxmox-ve': 'Proxmox VE'}[runtime.profile || last?.profile] || t('application', [], api);
+  const profile = {beyondtrust: 'BeyondTrust', guacamole: 'Apache Guacamole', 'proxmox-ve': 'Proxmox VE', 'rdp-secure-access': 'RDP Secure Access'}[runtime.profile || last?.profile] || t('application', [], api);
   const args = runtime.messageKey ? runtime.messageArgs || [] : profileKeys.includes(key) ? [profile] : Number.isInteger(runtime.httpStatus) ? [runtime.httpStatus] : [];
   return t(key, args, api);
 }

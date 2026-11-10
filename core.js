@@ -114,8 +114,10 @@ export function classifyResult(result) {
   const response = (status, messageKey, messageArgs = [], extra = {}) => ({status, messageKey, messageArgs, httpStatus: null, ...extra});
   if (result?.kind === 'app-loading') return response('waiting', 'runtimeAppLoading', [profile], {waitReason: 'app'});
   if (result?.kind === 'activity') return response('success', 'runtimeActivitySent', [profile]);
+  if (result?.kind === 'monitored') return response('success', 'runtimePortalMonitored', [profile]);
   if (result?.kind === 'renewed') return response('success', 'runtimeRenewalSent', [profile], {httpStatus: result.status ?? null});
   if (result?.kind === 'auth-required') return response('paused', 'runtimeAuthRequired', [profile]);
+  if (result?.kind === 'indeterminate') return response('paused', 'runtimeIndeterminate', [profile], {httpStatus: result.status ?? null});
   if (result?.kind === 'unsupported') return response('paused', 'runtimeUnsupported', [profile]);
   if (result?.kind === 'unsupported-auth') return response('paused', 'runtimeUnsupportedAuth', [profile]);
   if (result?.kind === 'native-error') return response('error', 'runtimeNativeError', [profile]);
@@ -145,7 +147,7 @@ export function normalizeRuntime(runtime = {}) {
   else if (data.status === 'idle') derived = {messageKey: 'runtimeIdle', messageArgs: []};
   else if (data.status === 'waiting') derived = classifyResult({kind: data.waitReason === 'app' ? 'app-loading' : data.waitReason === 'busy' ? 'busy' : 'waiting', profile: data.profile});
   else if (last?.kind) derived = classifyResult({kind: last.kind, profile: data.profile || last.profile, status: data.httpStatus, code: last.errorCode});
-  else if (data.status === 'success') derived = classifyResult({kind: data.method === 'activity' ? 'activity' : data.method === 'renewal' ? 'renewed' : 'http', profile: data.profile, status: data.httpStatus || 200});
+  else if (data.status === 'success') derived = classifyResult({kind: data.method === 'monitor' ? 'monitored' : data.method === 'activity' ? 'activity' : data.method === 'renewal' ? 'renewed' : 'http', profile: data.profile, status: data.httpStatus || 200});
   else if (data.status === 'paused') derived = classifyResult({kind: data.httpStatus ? 'http' : 'redirect', status: data.httpStatus});
   else if (Number.isInteger(data.httpStatus)) derived = classifyResult({kind: 'http', status: data.httpStatus});
   else derived = classifyResult({kind: 'network'});

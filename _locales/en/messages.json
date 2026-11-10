@@ -285,7 +285,7 @@
     "message": "A tab exception takes priority over the website rule. It ends when the tab closes or Chrome restarts."
   },
   "explanationProfiles": {
-    "message": "Recognized BeyondTrust consoles use activity signals. Guacamole and Proxmox VE use their own session-renewal interfaces. The popup shows the actual interval; your saved interval stays unchanged. A custom keep-alive URL uses background requests at your saved interval."
+    "message": "Recognized BeyondTrust consoles use activity signals. Guacamole and Proxmox VE use their own session interfaces. RDP Secure Access only monitors the loaded portal and adds no requests. The popup shows the actual interval; your saved interval stays unchanged. A custom keep-alive URL bypasses automatic profiles and sends background requests at your saved interval."
   },
   "explanationLimit": {
     "message": "Successful requests, activity signals and renewal attempts do not guarantee an active login. The website decides whether to extend a session; fixed session limits still apply. Nothing runs while Chrome is closed or the device is asleep."
@@ -507,5 +507,44 @@
   "badgeActive": {
     "message": "On",
     "description": "Toolbar badge for normal active keep-alive operation."
+  },
+  "runtimeIndeterminate": {
+    "message": "$p1$: The visible portal state could not be determined. Monitoring is paused.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "portalIntervalNote": {
+    "message": "$p1$ checks the visible portal: $p2$. Saved interval: $p3$. Monitoring avoids parallel portal requests during session-ID changes and leaves the page’s own refresh unchanged. A custom URL bypasses monitoring and sends GET requests.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "runtimePortalMonitored": {
+    "message": "$p1$: Portal status checked. The page’s own refresh is unchanged; no extra requests sent.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "methodMonitor": {
+    "message": "Portal monitoring"
+  },
+  "lastCheck": {
+    "message": "Last check"
+  },
+  "historyMonitorChecked": {
+    "message": "Portal status checked"
   }
 }

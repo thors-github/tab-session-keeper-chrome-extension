@@ -285,7 +285,7 @@
     "message": "Eine Tab-Ausnahme hat Vorrang vor der Website-Regel. Sie endet beim Schließen des Tabs oder beim Chrome-Neustart."
   },
   "explanationProfiles": {
-    "message": "Erkannte BeyondTrust-Konsolen verwenden Aktivitätssignale. Guacamole und Proxmox VE verwenden ihre eigenen Schnittstellen zur Sitzungsverlängerung. Das Popup zeigt das tatsächliche Intervall; dein gespeichertes Intervall bleibt unverändert. Eine eigene Keep-alive-Adresse verwendet Hintergrundanfragen im gespeicherten Intervall."
+    "message": "Erkannte BeyondTrust-Konsolen verwenden Aktivitätssignale. Guacamole und Proxmox VE verwenden ihre eigenen Sitzungsschnittstellen. RDP Secure Access überwacht nur das geladene Portal und fügt keine Anfragen hinzu. Das Popup zeigt das tatsächliche Intervall; dein gespeichertes Intervall bleibt unverändert. Eine eigene Keep-alive-Adresse umgeht automatische Profile und sendet Hintergrundanfragen im gespeicherten Intervall."
   },
   "explanationLimit": {
     "message": "Erfolgreiche Anfragen, Aktivitätssignale und Verlängerungsversuche garantieren keine aktive Anmeldung. Die Website entscheidet über die Verlängerung; feste Sitzungslimits bleiben bestehen. Während Chrome geschlossen ist oder der Rechner schläft, werden keine Anfragen oder Aktivitätssignale gesendet."
@@ -507,5 +507,44 @@
   "badgeActive": {
     "message": "An",
     "description": "Toolbar badge for normal active keep-alive operation."
+  },
+  "runtimeIndeterminate": {
+    "message": "$p1$: Der sichtbare Portalzustand konnte nicht bestimmt werden. Die Überwachung ist pausiert.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "portalIntervalNote": {
+    "message": "$p1$ prüft das sichtbare Portal: $p2$. Gespeichertes Intervall: $p3$. Die Überwachung vermeidet parallele Portalanfragen bei Sitzungs-ID-Wechseln und lässt das eigene Neuladen der Seite unverändert. Eine eigene Adresse umgeht die Überwachung und sendet GET-Anfragen.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "runtimePortalMonitored": {
+    "message": "$p1$: Portalstatus geprüft. Das eigene Aktualisieren der Seite bleibt unverändert; keine zusätzlichen Anfragen gesendet.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "methodMonitor": {
+    "message": "Portalüberwachung"
+  },
+  "lastCheck": {
+    "message": "Letzte Prüfung"
+  },
+  "historyMonitorChecked": {
+    "message": "Portalstatus geprüft"
   }
 }

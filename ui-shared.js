@@ -57,13 +57,16 @@ export function executionDetails(effective = {}, runtime = {}) {
   const actualIntervalMinutes = Number.isFinite(actual) && actual >= 1 && actual <= 60 ? actual : configuredIntervalMinutes;
   const activity = runtime.method === 'activity';
   const renewal = runtime.method === 'renewal';
-  const profileName = { beyondtrust: 'BeyondTrust', guacamole: 'Guacamole', 'proxmox-ve': 'Proxmox VE' }[runtime.profile] || '';
-  const methodName = t(activity ? 'methodActivity' : renewal ? 'methodRenewal' : 'methodRequest');
+  const monitor = runtime.method === 'monitor';
+  const profileName = { beyondtrust: 'BeyondTrust', guacamole: 'Guacamole', 'proxmox-ve': 'Proxmox VE', 'rdp-secure-access': 'RDP Secure Access' }[runtime.profile] || '';
+  const methodName = t(activity ? 'methodActivity' : renewal ? 'methodRenewal' : monitor ? 'methodMonitor' : 'methodRequest');
   const method = profileName ? `${profileName} · ${methodName}` : methodName;
   const intervalNote = activity && runtime.profile === 'beyondtrust'
     ? t('beyondTrustIntervalNote', [cadence(actualIntervalMinutes), cadence(configuredIntervalMinutes)])
+    : runtime.profile === 'rdp-secure-access' && monitor
+      ? t('portalIntervalNote', [profileName, cadence(actualIntervalMinutes), cadence(configuredIntervalMinutes)])
     : renewal && profileName ? t('nativeIntervalNote', [profileName, cadence(actualIntervalMinutes), cadence(configuredIntervalMinutes)]) : '';
-  return { configuredIntervalMinutes, actualIntervalMinutes, activity, renewal,
+  return { configuredIntervalMinutes, actualIntervalMinutes, activity, renewal, monitor,
     label: t('executionLabel', [method, cadence(actualIntervalMinutes)]), intervalNote };
 }
 

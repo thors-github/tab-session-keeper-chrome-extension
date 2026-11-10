@@ -1,12 +1,12 @@
-# Tab Session Keeper 1.2.1
+# Tab Session Keeper 1.2.2
 
 [English instructions](README.md)
 
-Lokale Chrome-Erweiterung für ausgewählte Tabs: Hintergrundanfragen oder unterstützte native Verlängerungsmethoden halten ihre Sitzung aktiv. Formulare und Seitenzustand bleiben erhalten. Gespeicherte Website-Regeln aktivieren passende offene Tabs auch nach einem Browser-Neustart wieder.
+Lokale Chrome-Erweiterung für ausgewählte Tabs: Hintergrundanfragen oder unterstützte native Verlängerungsmethoden versuchen, ihre Sitzung aktiv zu halten. Formulare und Seitenzustand bleiben erhalten. Gespeicherte Website-Regeln aktivieren passende offene Tabs auch nach einem Browser-Neustart wieder.
 
 ## Installieren und aktualisieren
 
-1. `tab-session-keeper-1.2.1.zip` in einen dauerhaften Ordner entpacken.
+1. `tab-session-keeper-1.2.2.zip` in einen dauerhaften Ordner entpacken.
 2. `chrome://extensions` öffnen und **Entwicklermodus** einschalten.
 3. **Entpackte Erweiterung laden** wählen und den Ordner mit `manifest.json` auswählen.
 4. Tab Session Keeper über das Erweiterungsmenü anheften.
@@ -37,6 +37,7 @@ Für automatische Erkennung die **Keep-alive-Adresse leer lassen**. Eine ausdrü
 | BeyondTrust-Webkonsole | Neutrales, nicht weitergereichtes `mousemove` direkt am Fenster der Seite | 1 Minute |
 | Apache Guacamole | Native authentifizierte `request()`-Anfrage an `api/session/tunnels` | 5 Minuten |
 | Proxmox VE | Native Ticket-Anfrage mit anschließendem `updateLoginData()` des Workspace | 15 Minuten |
+| RDP Secure Access | Nur den geladenen Portalzustand prüfen; keine zusätzlichen Anfragen | 3 Minuten |
 
 Der tatsächliche Abstand ist der kleinere Wert aus Einstellung und Profilgrenze. Die gespeicherte Einstellung bleibt erhalten. Erkennung erfordert bekannte Seitenmerkmale und native Funktionen; ein Produktname allein reicht nicht. Erkannte Anwendungen warten während des Starts oder pausieren bei nicht unterstützter Anmeldung beziehungsweise fehlenden erforderlichen Funktionen; ihre statische Startseite wird nicht ersatzweise angefragt.
 
@@ -46,13 +47,19 @@ Der tatsächliche Abstand ist der kleinere Wert aus Einstellung und Profilgrenze
 
 **Proxmox VE:** Unterstützt wird ein vorhandenes normales Web-Sitzungsticket. Eine verspätete Antwort wird nach Abmeldung, Kontowechsel, Ticketwechsel oder Profilwechsel verworfen. API-Token-Anmeldung, unvollständige TFA, abgemeldete Sitzungen und fehlende Workspace-Funktionen sind ausgeschlossen. Der native Workspace übernimmt neues Ticket und CSRF-Zustand. Die Erweiterung beginnt keine neue Anmeldung.
 
+**RDP Secure Access:** Das Profil überwacht ausschließlich den bereits geladenen Portalzustand anhand bekannter Seitenmerkmale von Web Protection Technology 1.27o. Es sendet keine zusätzlichen GET-/HEAD-Anfragen, lädt die Seite nicht neu und löst keine Eingabe oder native Schnittstelle aus. Das geplante Prüfintervall ist auf höchstens drei Minuten begrenzt; das beobachtete eigene Neuladen des Portals nach 200 Sekunden bleibt unverändert. Ein erkanntes Anmeldeformular oder ein unbekannter Portalzustand pausiert die Überwachung. Das ist keine Sitzungsverlängerung. Eine eigene Keep-alive-Adresse hat weiterhin Vorrang: Sie umgeht die Überwachung und sendet normale GET-Anfragen, die wieder zusätzliche parallele Portalanfragen verursachen können.
+
+Bei einer Seitenuntersuchung wurden angemeldete Portalmerkmale, ein späteres Anmeldeformular mit HTTP 200 und parallele Antworten mit unterschiedlichen neuen Sitzungscookies beobachtet. Zusätzliche vollständige Portalanfragen könnten dadurch stören; die reine Überwachung vermeidet diesen zusätzlichen Erweiterungsverkehr. Das beweist nicht, dass Abmeldungen damit verhindert werden. Der Grund für gemeldete Abmeldungen nach zwei bis fünf Stunden bleibt unbestätigt. Verbindungsdauer- oder geplante Trennungsregeln beweisen keine Laufzeit der Browser-Anmeldung. Feste serverseitige Anmeldelimits bleiben wirksam.
+
+Das Profil wurde live auf einer abgemeldeten Seite erkannt; angemeldete, abgemeldete und unklare Zustände sowie ausbleibende zusätzliche Anfragen werden mit lokalen Testseiten geprüft. Ein mehrstündiger Live-Test liegt nicht vor.
+
 Guacamole und Proxmox wurden mit quellengestützten lokalen Testnachbildungen geprüft, **nicht an echten Installationen**. Festgelegte Primärquellen: [Guacamole-Anmeldedienst](https://github.com/apache/guacamole-client/blob/31d2a6f6accc5ed4fecd491c30fc51728db940eb/guacamole/src/main/frontend/src/app/auth/service/authenticationService.js), [Guacamole-Sitzungszugriff](https://github.com/apache/guacamole-client/blob/31d2a6f6accc5ed4fecd491c30fc51728db940eb/guacamole/src/main/java/org/apache/guacamole/rest/session/SessionResource.java), [Guacamole-Seitenstruktur](https://github.com/apache/guacamole-client/blob/31d2a6f6accc5ed4fecd491c30fc51728db940eb/guacamole/src/main/frontend/src/index.html), [Proxmox-Workspace](https://github.com/proxmox/pve-manager/blob/c79d601b09c00f1b7a7d0ef7ec0fc9326038298e/www/manager6/Workspace.js), [Proxmox-Anmeldefunktionen](https://github.com/proxmox/proxmox-widget-toolkit/blob/d353f9466dee3e6c35a8af26e83899a6a580169c/src/Utils.js).
 
 ## Ergebnisse und Grenzen
 
 Eine erfolgreiche Anfrage bestätigt einen HTTP-Aufruf; ein Aktivitätsergebnis bestätigt das lokale Auslösen; ein Verlängerungsergebnis bestätigt den Abschluss der gewählten nativen Methode. Keines garantiert eine stundenlange Anmeldung. Die Website entscheidet weiterhin über feste Ablaufzeiten, erforderliche Anmeldung und MFA. Abgelaufene oder beim Browserende gelöschte Sitzungen können eine neue Anmeldung verlangen. Cookie-Sitzungen können zwischen Tabs geteilt sein.
 
-HTTP 401/403, Weiterleitungen und native Anmeldefehler pausieren den Tab. Website prüfen beziehungsweise anmelden und **Fortsetzen** wählen. Netzwerkfehler werden im regulären Intervall erneut versucht. Aktionen haben 15 Sekunden Zeitlimit; Chrome kann sie verzögern. Eine noch laufende native Aktion hält eine Sperre in der Seite, damit Folgeversuche keine parallele Verlängerung beginnen.
+HTTP 401/403, Weiterleitungen, native Anmeldefehler sowie ein sichtbares Anmeldeformular oder ein unbekannter Portalzustand im RDP-Secure-Access-Profil pausieren den Tab. Website prüfen beziehungsweise anmelden und **Fortsetzen** wählen. Netzwerkfehler werden im regulären Intervall erneut versucht. Aktionen haben 15 Sekunden Zeitlimit; Chrome kann sie verzögern. Eine noch laufende native Aktion hält eine Sperre in der Seite, damit Folgeversuche keine parallele Verlängerung beginnen.
 
 Chrome muss laufen und der Rechner wach sein. Alarme können verzögert werden. Schutz vor automatischem Verwerfen verhindert nicht jedes Einfrieren. Die Erweiterung kann serverseitige Sitzungsregeln nicht ändern.
 
@@ -85,4 +92,4 @@ Die Tests verwenden Dummy-Anmeldedaten, lokale HTTP-Seiten und getrennte tempor�
 
 Für automatisierte Funktionstests erhält nur eine temporäre Erweiterungskopie Zugriff auf die lokale Testadresse. Ein zusätzlicher Durchlauf mit unverändertem Produktionsmanifest prüft echte Toolbar-Aktivierung und `activeTab`. Native Annahme der optionalen Berechtigungsabfrage, Betriebssystem-Ruhezustand und echte Guacamole-/Proxmox-Kompatibilität bleiben manuelle Prüfungen. Screenshots landen außerhalb des Projekts im temporären Betriebssystemordner.
 
-Die Paketierung erstellt im übergeordneten Ordner `tab-session-keeper.zip` und `tab-session-keeper-1.2.1.zip`. Enthalten sind ausschließlich Produktionsdateien, beide Sprachkataloge, Symbole und Dokumentation; keine Entwicklungsabhängigkeiten oder Tests.
+Die Paketierung erstellt im übergeordneten Ordner `tab-session-keeper.zip` und `tab-session-keeper-1.2.2.zip`. Enthalten sind ausschließlich Produktionsdateien, beide Sprachkataloge, Symbole und Dokumentation; keine Entwicklungsabhängigkeiten oder Tests.

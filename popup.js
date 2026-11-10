@@ -27,8 +27,9 @@ function renderHistory(attempts) {
     time.textContent = timeLabel(attempt.at);
     const result = document.createElement('span');
     const activity = attempt.method === 'activity';
-    const labels = { success: t(activity ? 'historyActivitySent' : attempt.method === 'renewal' ? 'historyRenewalSent' : 'historyRequestSuccess'), paused: t('historyPaused'), error: t('historyError'), waiting: t('historyWaiting') };
-    const http = !activity && Number.isInteger(attempt.httpStatus) ? ` · ${t('httpStatus', [attempt.httpStatus])}` : '';
+    const monitor = attempt.method === 'monitor';
+    const labels = { success: t(activity ? 'historyActivitySent' : attempt.method === 'renewal' ? 'historyRenewalSent' : monitor ? 'historyMonitorChecked' : 'historyRequestSuccess'), paused: t('historyPaused'), error: t('historyError'), waiting: t('historyWaiting') };
+    const http = !activity && !monitor && Number.isInteger(attempt.httpStatus) ? ` · ${t('httpStatus', [attempt.httpStatus])}` : '';
     result.textContent = `${labels[attempt.status] || t('historyCompleted')}${http}`;
     row.dataset.status = attempt.status || 'idle';
     row.append(time, result);
@@ -57,8 +58,8 @@ function render(data, replaceSettings = false) {
   $('method-summary').hidden = !effective.enabled;
   $('profile-settings-note').textContent = execution.intervalNote;
   $('profile-settings-note').hidden = !execution.intervalNote;
-  $('last-attempt-label').textContent = t(execution.activity ? 'lastActivity' : execution.renewal ? 'lastRenewal' : 'lastRequest');
-  $('last-attempt').textContent = `${timeLabel(runtime.lastAttemptAt)}${!execution.activity && runtime.httpStatus ? ` · ${t('httpStatus', [runtime.httpStatus])}` : ''}`;
+  $('last-attempt-label').textContent = t(execution.activity ? 'lastActivity' : execution.renewal ? 'lastRenewal' : execution.monitor ? 'lastCheck' : 'lastRequest');
+  $('last-attempt').textContent = `${timeLabel(runtime.lastAttemptAt)}${!execution.activity && !execution.monitor && runtime.httpStatus ? ` · ${t('httpStatus', [runtime.httpStatus])}` : ''}`;
   $('next-attempt').textContent = runtime.status === 'paused' || runtime.status === 'permission' ? t('paused') : timeLabel(runtime.nextAttemptAt);
   $('resume-tab').hidden = !effective.enabled || runtime.status !== 'paused';
   $('reset-override').hidden = !rule?.enabled || !effective.hasOverride;

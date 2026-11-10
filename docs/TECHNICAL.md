@@ -1,4 +1,4 @@
-# Technical guide: Tab Session Keeper 1.2.1
+# Technical guide: Tab Session Keeper 1.2.2
 
 [Project overview](../README.md) · [Deutsche Anleitung](../README.de.md)
 
@@ -6,7 +6,7 @@ A local Chrome extension that keeps selected tabs active using background reques
 
 ## Install or update
 
-1. Extract `tab-session-keeper-1.2.1.zip` to a permanent folder.
+1. Extract `tab-session-keeper-1.2.2.zip` to a permanent folder.
 2. Open `chrome://extensions` and enable **Developer mode**.
 3. Choose **Load unpacked** and select the folder containing `manifest.json`.
 4. Pin Tab Session Keeper through Chrome's extensions menu.
@@ -37,6 +37,7 @@ Leave **Keep-alive URL empty** to use automatic detection. A custom same-origin 
 | BeyondTrust web console | Neutral, non-bubbling `mousemove` directly on the page's window | 1 minute |
 | Apache Guacamole | The page's native authenticated `request()` to `api/session/tunnels` | 5 minutes |
 | Proxmox VE | Native ticket POST followed by the workspace's `updateLoginData()` | 15 minutes |
+| RDP Secure Access | Check the loaded portal state only; no additional requests | 3 minutes |
 
 The actual interval is the smaller of your configured interval and the profile maximum. Your saved setting remains unchanged. Recognition requires known page fingerprints and native capabilities; branding alone is insufficient. Recognized applications wait while initializing or pause when authentication or required APIs are unsupported; they do not silently fetch their static shell.
 
@@ -46,13 +47,19 @@ The actual interval is the smaller of your configured interval and the profile m
 
 **Proxmox VE:** only an existing normal web-session ticket is supported. A late response is discarded if the page has logged out, changed accounts, replaced its ticket or switched profiles. API-token authentication, incomplete TFA, signed-out sessions and missing workspace capabilities are excluded. The native workspace applies the returned ticket and CSRF state. The extension does not start a fresh login.
 
+**RDP Secure Access:** this profile only monitors the already loaded portal using known Web Protection Technology 1.27o page markers. It sends no additional GET/HEAD requests, does not reload the page and invokes no input or native API. Its scheduled check interval is capped at three minutes; the portal’s observed own 200-second refresh remains unchanged. A recognized login form or an unknown portal state pauses monitoring. This does not renew a session. A custom keep-alive URL still takes priority: it bypasses monitoring and sends regular GET requests, which can reintroduce additional parallel portal requests.
+
+Page inspection observed authenticated portal markers, a later login page returned with HTTP 200, and concurrent responses issuing different new session cookies. Extra full-portal requests could interfere with that behavior; monitoring avoids this additional extension traffic. This does not prove that logouts will be prevented. The cause of reported logouts after two to five hours remains unconfirmed. Connection-duration or scheduled-disconnection policies do not establish browser-login lifetime. Fixed server-side authentication limits remain effective.
+
+The profile was checked live on a signed-out page; authenticated, signed-out and indeterminate states plus the absence of extra requests are covered by local fixtures. There has been no multi-hour live retention test.
+
 Guacamole and Proxmox adapters were checked with source-backed local test doubles, **not live installations**. Upstream references are pinned: [Guacamole authentication service](https://github.com/apache/guacamole-client/blob/31d2a6f6accc5ed4fecd491c30fc51728db940eb/guacamole/src/main/frontend/src/app/auth/service/authenticationService.js), [Guacamole session access](https://github.com/apache/guacamole-client/blob/31d2a6f6accc5ed4fecd491c30fc51728db940eb/guacamole/src/main/java/org/apache/guacamole/rest/session/SessionResource.java), [Guacamole page structure](https://github.com/apache/guacamole-client/blob/31d2a6f6accc5ed4fecd491c30fc51728db940eb/guacamole/src/main/frontend/src/index.html), [Proxmox workspace renewal](https://github.com/proxmox/pve-manager/blob/c79d601b09c00f1b7a7d0ef7ec0fc9326038298e/www/manager6/Workspace.js), [Proxmox authentication helpers](https://github.com/proxmox/proxmox-widget-toolkit/blob/d353f9466dee3e6c35a8af26e83899a6a580169c/src/Utils.js).
 
 ## Results and limits
 
 A successful request confirms an HTTP operation. An activity result confirms local dispatch; a renewal result confirms completion of the selected native method. None guarantees that you will remain signed in for hours. The website still controls absolute expiry, required authentication and MFA. Expired or browser-deleted sessions may require signing in again. Cookie sessions may be shared between tabs.
 
-HTTP 401/403, redirects and native authentication failures pause the tab. Sign in or inspect the website, then choose **Resume**. Network failures retry on the regular schedule. Actions have a 15-second timeout; Chrome can delay execution. An unresolved native operation retains a page-local lock, so later attempts wait instead of creating parallel renewals.
+HTTP 401/403, redirects, native authentication failures, and a visible login form or an unknown portal state in the RDP Secure Access profile pause the tab. Sign in or inspect the website, then choose **Resume**. Network failures retry on the regular schedule. Actions have a 15-second timeout; Chrome can delay execution. An unresolved native operation retains a page-local lock, so later attempts wait instead of creating parallel renewals.
 
 Chrome must be running and the computer awake. Alarms may be delayed. Preventing automatic tab discard does not prevent all freezing. The extension has no server-side control over session policy.
 
@@ -86,4 +93,4 @@ Tests use dummy credentials, local HTTP fixtures and disposable Chromium profile
 
 The full smoke suite grants only loopback host access in a temporary copy. A separate production-manifest run verifies real toolbar activation and `activeTab` without this grant. Native optional-permission acceptance, OS sleep and live Guacamole/Proxmox compatibility remain manual checks. Screenshots go outside the repository to the OS temporary directory.
 
-Packaging writes `tab-session-keeper.zip` and `tab-session-keeper-1.2.1.zip` in the extension directory's parent. ZIPs include only production files, both language catalogs, icons and documentation; development dependencies and tests are excluded.
+Packaging writes `tab-session-keeper.zip` and `tab-session-keeper-1.2.2.zip` in the extension directory's parent. ZIPs include only production files, both language catalogs, icons and documentation; development dependencies and tests are excluded.

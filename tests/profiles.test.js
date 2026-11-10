@@ -6,10 +6,28 @@ import {profileOperation, PROFILE_REGISTRY} from '../profiles.js';
 const plain = value => JSON.parse(JSON.stringify(value));
 const LOCK = 'data-tab-session-keeper-operation';
 
+function portalDocument(state = 'authenticated', {product = true} = {}) {
+  const title = product ? 'RDP Secure Access - Web Protection Technology' : 'Unrelated website';
+  const logo = {getAttribute: () => '/img/sec_acs_logo_wht.png'};
+  const logout = {textContent: 'Abmelden', getAttribute: () => '/?action=logout'};
+  const fields = new Set(['input[name="username"][type="text"]', 'input[name="password"][type="password"]',
+    'input[name="2fa"][type="password"]', '[name="Anmelden"][type="submit"]']);
+  const form = {getAttribute: key => key === 'method' ? 'POST' : '', querySelector: selector => fields.has(selector) ? {} : null};
+  return {title, body: {textContent: `${state === 'authenticated' ? 'Sie sind angemeldet als PRIVATE-USER. ' : ''}${product ? '2026 © Web Protection Technology' : ''}`},
+    querySelector: selector => selector === 'title' ? {textContent: title} : null,
+    querySelectorAll: selector => selector === 'img[src]' ? product ? [logo] : []
+      : selector === 'a[href]' ? state === 'authenticated' ? [logout] : []
+        : selector === 'form' ? state === 'login' ? [form] : [] : [],
+  };
+}
+
 function environment(profile = 'generic', shared = null) {
   const attrs = shared?.attrs || new Map();
   const markers = new Set();
   const scripts = [];
+  const images = [];
+  const anchors = [];
+  const forms = [];
   const calls = {fetch: [], events: [], native: [], apply: [], updates: 0};
   const timers = new Map();
   let timerId = 0;
@@ -19,9 +37,9 @@ function environment(profile = 'generic', shared = null) {
     setAttribute: (key, value) => attrs.set(key, value),
     removeAttribute: key => attrs.delete(key),
   };
-  const document = {readyState: 'complete', documentElement: root,
+  const document = {readyState: 'complete', documentElement: root, title: '', body: {textContent: ''},
     querySelector: selector => selector.split(',').some(item => markers.has(item.trim())) ? {} : null,
-    querySelectorAll: selector => selector === 'script[src]' ? scripts.map(src => ({src})) : [],
+    querySelectorAll: selector => selector === 'script[src]' ? scripts.map(src => ({src})) : selector === 'img[src]' ? images : selector === 'a[href]' ? anchors : selector === 'form' ? forms : [],
   };
   const sandbox = {URL, AbortController, Promise, document, location: new URL('https://example.com/'),
     crypto: {randomUUID: () => 'operation-random-token'},
@@ -45,7 +63,8 @@ function environment(profile = 'generic', shared = null) {
   const app = {Setup: {auth_cookie_name: 'PVEAuthCookie'}, UserName: 'PRIVATE-PVE-USER', LoggedOut: false,
     Utils: {authOK: () => 'PVE:PRIVATE-TICKET', getStoredAuth: () => ({})}};
   function configure(name) {
-    markers.clear(); scripts.length = 0; attrs.delete('ng-app'); attrs.delete('ng-controller');
+    markers.clear(); scripts.length = 0; images.length = 0; anchors.length = 0; forms.length = 0; attrs.delete('ng-app'); attrs.delete('ng-controller');
+    document.title = ''; document.body = {textContent: ''};
     delete sandbox.Guacamole; delete sandbox.angular; delete sandbox.Proxmox; delete sandbox.PVE; delete sandbox.Ext;
     sandbox.location = new URL('https://example.com/');
     if (name === 'beyondtrust') {
@@ -61,13 +80,17 @@ function environment(profile = 'generic', shared = null) {
       sandbox.Proxmox = app; sandbox.PVE = {};
       sandbox.Ext = {ComponentQuery: {query: () => [workspace]}, decode: JSON.parse,
         Ajax: {request(options) { calls.native.push(options); }} };
+    } else if (name === 'rdp-secure-access') {
+      const portal = portalDocument();
+      document.title = portal.title; document.body = portal.body;
+      images.push(...portal.querySelectorAll('img[src]')); anchors.push(...portal.querySelectorAll('a[href]'));
     }
   }
   configure(profile);
   const context = vm.createContext(sandbox);
   // This is the same serialization boundary as scripting.executeScript({func}).
   const execute = vm.runInContext(`(${profileOperation.toString()})`, context);
-  return {attrs, markers, scripts, sandbox, document, service, app, workspace, calls, timers, configure,
+  return {attrs, markers, scripts, images, anchors, forms, sandbox, document, service, app, workspace, calls, timers, configure,
     setAuth: value => { auth = value; },
     run: (endpoint = '', id = 'auto', detectOnly = false) => execute('https://example.com', endpoint, id, detectOnly),
     fireDeadline() { for (const [id, entry] of [...timers]) { if (entry.delay === 15000) { timers.delete(id); entry.callback(); } } },
@@ -220,4 +243,113 @@ test('origin changes prevent any operation, and native missing capabilities are 
   delete env.service.request;
   assert.equal((await env.run()).kind, 'unsupported');
   assert.equal(env.calls.fetch.length, 0);
+});
+
+test('RDP authenticated portal is monitored without requests, page changes, events, or query replay', async () => {
+  const env = environment('rdp-secure-access');
+  env.sandbox.location = new URL('https://example.com/?tab=PRIVATE-TAB&action=logout&command=terminate&systemid=PRIVATE-SYSTEM&userid=PRIVATE-ID');
+  env.anchors.push({textContent: 'Aktualisieren', getAttribute: () => '/?tab=&action=logout&systemid=PRIVATE-SYSTEM'});
+  const before = env.sandbox.location.href;
+  for (let i = 0; i < 3; i++) {
+    const value = plain(await env.run());
+    assert.deepEqual(value, {kind: 'monitored', profile: 'rdp-secure-access', method: 'monitor'});
+    assert.doesNotMatch(JSON.stringify(value), /PRIVATE|USER|SYSTEM|HTML/);
+  }
+  assert.equal(env.sandbox.location.href, before);
+  assert.equal(env.calls.fetch.length, 0);
+  assert.equal(env.calls.native.length, 0);
+  assert.equal(env.calls.events.length, 0);
+  assert.equal(env.calls.updates, 0);
+  assert.equal(env.timers.size, 0);
+  assert.equal(env.attrs.has(LOCK), false);
+});
+
+test('RDP visible login pauses without submitting credentials or making any requests', async () => {
+  const env = environment('rdp-secure-access');
+  const login = portalDocument('login');
+  env.document.body = login.body;
+  env.anchors.length = 0;
+  env.forms.push(...login.querySelectorAll('form'));
+  assert.deepEqual(plain(await env.run()), {kind: 'auth-required', profile: 'rdp-secure-access', method: 'monitor'});
+  assert.equal(env.calls.fetch.length, 0);
+  assert.equal(env.calls.native.length, 0);
+  assert.equal(env.calls.events.length, 0);
+});
+
+test('RDP visible transition from authenticated portal to login is recognized while network stays untouched', async () => {
+  const env = environment('rdp-secure-access');
+  assert.equal((await env.run()).kind, 'monitored');
+  const login = portalDocument('login');
+  env.document.body = login.body;
+  env.forms.push(...login.querySelectorAll('form'));
+  env.anchors.length = 0;
+  assert.equal((await env.run()).kind, 'auth-required');
+  assert.equal(env.calls.fetch.length, 0);
+});
+
+test('RDP uncertain visible state pauses and a known different route is unsupported without probing it', async () => {
+  const env = environment('rdp-secure-access');
+  env.document.body = {textContent: '2026 © Web Protection Technology'};
+  env.anchors.length = 0;
+  assert.equal((await env.run()).kind, 'indeterminate');
+  env.sandbox.location = new URL('https://example.com/testportlocal.php?hostname=PRIVATE&port=3389&gw=PRIVATE');
+  assert.equal((await env.run()).kind, 'unsupported');
+  assert.equal(env.calls.fetch.length, 0);
+  env.sandbox.location = new URL('https://example.com/');
+  env.document.title = 'Different portal';
+  assert.equal((await env.run()).kind, 'unsupported');
+  assert.equal(env.calls.fetch.length, 0);
+});
+
+test('RDP monitor respects a shared operation lock; explicit custom URL deliberately retains generic GET precedence', async () => {
+  const env = environment('rdp-secure-access');
+  env.attrs.set(LOCK, 'another-operation');
+  assert.equal((await env.run()).kind, 'busy');
+  assert.equal(env.calls.fetch.length, 0);
+  env.attrs.delete(LOCK);
+  const custom = 'https://example.com/explicit?tab=&action=manual-choice';
+  assert.deepEqual(plain(await env.run(custom)), {kind: 'http', profile: 'generic', method: 'request', status: 204});
+  assert.equal(env.calls.fetch[0].url, custom);
+});
+
+test('toy rotating-session control shows generic GET can add a late cookie overwrite while DOM monitor adds none', async () => {
+  // This deterministic model demonstrates the concurrency hazard; it is not a
+  // claim about the unknown server implementation of any real deployment.
+  function rotatingServer() {
+    let cookie = 'old';
+    let sequence = 0;
+    const sessions = new Map([['old', true]]);
+    return {
+      request() {
+        const authenticated = sessions.get(cookie) === true;
+        sessions.delete(cookie);
+        const next = `session-${++sequence}`;
+        sessions.set(next, authenticated);
+        return {finish() { cookie = next; return {status: 200, type: 'basic', body: {async cancel() {}}}; }};
+      },
+      authenticated: () => sessions.get(cookie) === true,
+    };
+  }
+  const legacy = environment('generic');
+  const oldServer = rotatingServer();
+  const oldNative = oldServer.request();
+  let finishLegacy;
+  legacy.sandbox.fetch = () => {
+    const request = oldServer.request();
+    return new Promise(resolve => { finishLegacy = () => resolve(request.finish()); });
+  };
+  const oldPending = legacy.run('https://example.com/?tab=');
+  oldNative.finish();
+  assert.equal(oldServer.authenticated(), true);
+  finishLegacy();
+  assert.equal((await oldPending).kind, 'http');
+  assert.equal(oldServer.authenticated(), false);
+
+  const monitor = environment('rdp-secure-access');
+  const safeServer = rotatingServer();
+  const native = safeServer.request();
+  monitor.sandbox.fetch = () => { throw new Error('Monitoring must not send a session-rotating request'); };
+  assert.equal((await monitor.run()).kind, 'monitored');
+  native.finish();
+  assert.equal(safeServer.authenticated(), true);
 });
